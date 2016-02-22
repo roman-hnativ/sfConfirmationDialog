@@ -1,0 +1,52 @@
+<apex:page docType="html-5.0" deferLastCommandUntilReady="true" cache="false" >    
+	<apex:includeScript value="{!$Resource.jquery}"/>
+    <apex:includescript value="/soap/ajax/34.0/connection.js" />
+	
+	<script type="text/javascript">
+	 function showConfirmationDialog (cMessage,cYesLabel,cNoLabel,yesFunc,noFunc) {
+
+          var d = sfdcPage.dialogs['rhConfirmDialog'], close;
+          if (!d) {
+            d = sfdcPage.dialogs['rhConfirmDialog'] = new SimpleDialog('rhConfirmDialog', false);
+            d.setTitle('');
+            d.setWidth(600);
+            d.createDialog();
+          }
+
+          var dBody = '<div> <b> '+cMessage+'</b> <br/>   <input type="submit" value="'+cYesLabel+'"/>    <input type="submit" value="'+cNoLabel+'"/></div> ';
+          j$(d.dialog).find('#rhConfirmDialogInner').html(dBody);
+
+          j$(d.dialog).find('#rhConfirmDialogInner input[type="submit"]').one('click', function() {
+       
+               if (j$(this).val() == cYesLabel )  {
+		            if (yesFunc && (typeof yesFunc == "function")) {
+			            yesFunc();
+		            }
+	           }
+	           else
+	           {
+		            if (noFunc && (typeof noFunc == "function")) {
+			            noFunc();
+		            }
+	           }
+	          d.hide();
+              return false;
+            });
+
+
+          if (j$(d.dialog).find('#InlineEditDialogX').size() == 0) {  
+            close = j$('<a id="InlineEditDialogX" title="Close" tabindex="0" href="javascript:void(0)" class="dialogClose">Close</a>');
+            close.mouseover(function() {
+              this.className = 'dialogCloseOn';
+            }).mouseout(function() {
+              this.className = 'dialogClose';
+            }).click(function() {
+              d.hide();
+            });
+            close.insertBefore(j$(d.dialog).find('.topLeft h2'));
+          }
+         
+          d.show();
+        }
+    </script>
+</apex:page>
